@@ -6,23 +6,277 @@
     android:layout_height="match_parent"
     tools:context=".HomeFragment">
 
-    <TextView
-        android:id="@+id/textview_first"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_home_fragment"
-        app:layout_constraintBottom_toTopOf="@id/button_first"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button_first"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/next"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_first" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/layoutToday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="8dp"
+                android:background="@drawable/rounded_background"
+                android:padding="8dp">
+
+                <RelativeLayout
+                    android:id="@+id/layoutLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvTodayMetric"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:text="@string/metric"
+                            android:textAppearance="?android:textAppearanceLarge"
+                            android:textColor="@android:color/white"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvTodayImperial"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/imperial"
+                            android:textAppearance="?android:textAppearanceLarge"
+                            android:textColor="@android:color/darker_gray"
+
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+
+                    <ImageButton
+                        android:id="@+id/imageLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@+id/etLocation"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/location"
+                        android:src="@drawable/ic_baseline_search" />
+
+                    <EditText
+                        android:id="@+id/etLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="8dp"
+                        android:autofillHints="@string/enter_location"
+                        android:background="@android:color/transparent"
+                        android:hint="@string/enter_location"
+                        android:inputType="textAutoCorrect"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                        android:textColor="@color/white"
+                        android:textColorHint="@android:color/darker_gray"
+                        android:textStyle="bold" />
+
+                </RelativeLayout>
+
+                <pl.droidsonroids.gif.GifImageView
+                    android:id="@+id/progress"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_below="@+id/layoutLocation"
+                    android:layout_centerHorizontal="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/loader" />
+
+                <TextView
+                    android:id="@+id/tvTodayDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/progress"
+                    android:layout_centerHorizontal="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/white" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvTodayDate"
+                    android:background="@android:color/transparent">
+
+                    <ImageView
+                        android:id="@+id/imgToday"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="16dp"
+                        android:contentDescription="@string/icon" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@+id/imgToday">
+
+
+                        <TextView
+                            android:id="@+id/tvTodayDegree"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvTodayFeelLike"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tvTodayDegree"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
+
+                        <RelativeLayout
+                            android:id="@+id/layoutMinMax"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tvTodayFeelLike"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true">
+
+
+                            <TextView
+                                android:id="@+id/tvTodayMinMax"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="4dp"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                                android:textColor="@color/white" />
+
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_toEndOf="@+id/tvTodayMinMax"
+                                android:text="@string/min_max"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                                android:textColor="@color/white" />
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/tvTodayDesc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/layoutMinMax"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                            android:textColor="@color/white"
+                            android:textStyle="bold" />
+
+                        <RelativeLayout
+                            android:id="@+id/layoutWindHum"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tvTodayDesc">
+
+                            <RelativeLayout
+                                android:id="@+id/layoutWind"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true">
+
+                                <TextView
+                                    android:id="@+id/tvTodayWind"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerHorizontal="true"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                                    android:textColor="@color/white" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/tvTodayWind"
+                                    android:layout_centerHorizontal="true"
+                                    android:text="@string/wind_speed"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                                    android:textColor="@color/white" />
+
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:id="@+id/layoutHum"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="16dp">
+
+                                <TextView
+                                    android:id="@+id/tvTodayHum"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerHorizontal="true"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                                    android:textColor="@color/white" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/tvTodayHum"
+                                    android:layout_centerHorizontal="true"
+                                    android:text="@string/humidity"
+                                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                                    android:textColor="@color/white" />
+
+                            </RelativeLayout>
+
+
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/layoutHours"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layoutToday"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="16dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:background="@android:color/transparent"
+                    android:nestedScrollingEnabled="true"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/items_time" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
