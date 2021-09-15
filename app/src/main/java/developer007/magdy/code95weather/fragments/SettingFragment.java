@@ -29,7 +29,6 @@ public class SettingFragment extends Fragment {
     private TextView tvSettingMetric, tvSettingImperial;
     private LinearLayout layoutBackHome, layoutExit, layoutSet;
     private String strCity, strCity1, strCity2, strCity3, strCity4, strUnit;
-    private SharedPrefManager sharedPrefManager;
 
     @Override
     public View onCreateView(
@@ -38,7 +37,6 @@ public class SettingFragment extends Fragment {
     ) {
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
         AppCompatActivity compatActivity = (AppCompatActivity) view.getContext();
-        sharedPrefManager = new SharedPrefManager();
 
 
         etCity = view.findViewById(R.id.etCity);
