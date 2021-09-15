@@ -74,7 +74,7 @@ public class WeatherViewModel extends ViewModel {
                                         Log.d(TAG, "onClick: Mgd" + response.message());
                                         Intent i = new Intent(context.getApplicationContext(), MainActivity.class);
                                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        SharedPrefManager.setAuthVal(context, "location", "Cairo");
+                                        SharedPrefManager.setAuthVal(context, "location", context.getString(R.string.shared_city));
                                         context.getApplicationContext().startActivity(i);
 
                                     }).create().show();
