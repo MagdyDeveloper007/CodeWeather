@@ -3,26 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/HomeFragment">
+    app:startDestination="@id/TodayFragment">
 
     <fragment
-        android:id="@+id/HomeFragment"
-        android:name="developer007.magdy.code95weather.HomeFragment"
-        android:label="@string/home_fragment_label"
-        tools:layout="@layout/fragment_home">
+        android:id="@+id/TodayFragment"
+        android:name="developer007.magdy.code95weather.fragments.TodayFragment"
+        android:label="@string/today_fragment_label"
+        tools:layout="@layout/fragment_today">
 
         <action
-            android:id="@+id/action_HomeFragment_to_SettingFragment"
+            android:id="@+id/action_TodayFragment_to_SettingFragment"
             app:destination="@id/SettingFragment" />
     </fragment>
     <fragment
         android:id="@+id/SettingFragment"
-        android:name="developer007.magdy.code95weather.SettingFragment"
+        android:name="developer007.magdy.code95weather.fragments.SettingFragment"
         android:label="@string/setting_fragment_label"
         tools:layout="@layout/fragment_setting">
 
         <action
-            android:id="@+id/action_SettingFragment_to_HomeFragment"
-            app:destination="@id/HomeFragment" />
+            android:id="@+id/action_SettingFragment_to_TodayFragment"
+            app:destination="@id/TodayFragment" />
     </fragment>
 </navigation>
