@@ -1,16 +1,11 @@
 <resources>
     <string name="app_name">Code95Weather</string>
-    <string name="action_settings">Settings</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="home_fragment_label">Home Fragment</string>
+    <string name="today_fragment_label">Today Fragment</string>
     <string name="setting_fragment_label">Setting Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-
-    <string name="hello_home_fragment">Hello home fragment</string>
-    <string name="hello_setting_fragment">Hello setting fragment. Arg: %1$s</string>
-
-    <string name="enter_location">City</string>
+    <string name="enter_location">Enter City</string>
+    <string name="enter_unit">Enter unit</string>
     <string name="today">Today</string>
     <string name="_7_days">7 days</string>
     <string name="metric">℃</string>
@@ -26,4 +21,17 @@
     <string name="wind_speed">Wind speed</string>
     <string name="humidity">Humidity</string>
     <string name="min_max">min/max</string>
+    <string name="setting">Setting</string>
+    <string name="default_unit">Default Unit:</string>
+    <string name="default_city">Default City:</string>
+    <string name="share">Share</string>
+    <string name="update">Update</string>
+    <string name="exit">Exit</string>
+    <string name="set">Set</string>
+    <string name="back">Home</string>
+    <string name="select_application">Select Application</string>
+    <string name="please_update">Please update the app</string>
+    <string name="saved">Saved</string>
+    <string name="shared_city">London</string>
+    <string name="city_option">City (option):</string>
 </resources>

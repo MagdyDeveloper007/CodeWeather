@@ -24,5 +24,5 @@ public class SharedPrefManager {
 /*
 hint
 1) unit: imperial or metric
-2) location
+2) location, location1, location2, location3, location4,
  */

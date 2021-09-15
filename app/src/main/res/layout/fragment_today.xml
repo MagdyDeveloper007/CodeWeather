@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeFragment">
+    android:background="@color/blue_500"
+    tools:context=".fragments.TodayFragment">
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -47,7 +49,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
                             android:text="@string/metric"
-                            android:textAppearance="?android:textAppearanceLarge"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large"
                             android:textColor="@android:color/white"
                             android:textStyle="bold" />
 
@@ -56,7 +58,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/imperial"
-                            android:textAppearance="?android:textAppearanceLarge"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large"
                             android:textColor="@android:color/darker_gray"
 
                             android:textStyle="bold" />
@@ -90,16 +92,27 @@
                         android:textColorHint="@android:color/darker_gray"
                         android:textStyle="bold" />
 
+                    <ImageButton
+                        android:id="@+id/imageSetting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/setting"
+                        android:src="@drawable/ic_baseline_settings" />
+
                 </RelativeLayout>
 
                 <pl.droidsonroids.gif.GifImageView
                     android:id="@+id/progress"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_below="@+id/layoutLocation"
                     android:layout_centerHorizontal="true"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/loader" />
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/loader"
+                    android:visibility="visible" />
 
                 <TextView
                     android:id="@+id/tvTodayDate"
@@ -124,7 +137,8 @@
                         android:layout_alignParentTop="true"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="16dp"
-                        android:contentDescription="@string/icon" />
+                        android:contentDescription="@string/icon"
+                        android:src="@drawable/icon" />
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
@@ -273,8 +287,10 @@
                     android:layout_height="match_parent"
                     android:layout_centerHorizontal="true"
                     android:background="@android:color/transparent"
-                    android:nestedScrollingEnabled="true"
+                    android:nestedScrollingEnabled="false"
+                    android:scrollbars="vertical"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:stackFromEnd="true"
                     tools:listitem="@layout/items_time" />
             </RelativeLayout>
         </RelativeLayout>
