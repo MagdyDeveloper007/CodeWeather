@@ -2,6 +2,7 @@ package developer007.magdy.code95weather.fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,12 +44,10 @@ public class TodayFragment extends Fragment {
             strLocation, strAppId, strIconBase, strIconExt, strImageIcon, strSpeed, strMinMax;
     private long strTodayDate;
     private String feels_like, temp_min, temp_max, humidity;
-    private SharedPrefManager sharedPrefManager;
     private WeatherViewModel weatherViewModel;
     private AppCompatActivity compatActivity;
     private static final String TAG = "TodayFragment";
     private ForeCastAdapter foreCastAdapter;
-    private String cnt = "10";
 
     @Override
     public View onCreateView(
@@ -57,6 +56,12 @@ public class TodayFragment extends Fragment {
     ) {
         View view = inflater.inflate(R.layout.fragment_today, container, false);
         compatActivity = (AppCompatActivity) view.getContext();
+        strTodayUnit = SharedPrefManager.getAuthPref(compatActivity).getString("unit", "metric");
+        strLocation = SharedPrefManager.getAuthPref(compatActivity).getString("location", "");
+        if (TextUtils.isEmpty(strLocation)) {
+            NavHostFragment.findNavController(this)
+                    .navigate(R.id.action_TodayFragment_to_SettingFragment);
+        }
         API api = new API();
         strAppId = api.getApId();
         strIconBase = api.getImageURl();
@@ -80,12 +85,10 @@ public class TodayFragment extends Fragment {
         imageSetting = view.findViewById(R.id.imageSetting);
         recyclerTime = view.findViewById(R.id.recyclerTime);
 
-        sharedPrefManager = new SharedPrefManager();
 
         foreCastAdapter = new ForeCastAdapter();
 
-        strTodayUnit = SharedPrefManager.getAuthPref(compatActivity).getString("unit", "metric");
-        strLocation = SharedPrefManager.getAuthPref(compatActivity).getString("location", "");
+
         etLocation.setText(strLocation);
         if (strTodayUnit.equals("metric")) {
             tvTodayMetric.setTextColor(Color.WHITE);
@@ -195,6 +198,7 @@ public class TodayFragment extends Fragment {
 
     //handling the view model singular for next days
     public void handlingViewModelNext(String location, String todayUnit, String appId) {
+
         progress.setVisibility(View.VISIBLE);
 
         weatherViewModel = new ViewModelProvider(compatActivity).get(WeatherViewModel.class);
