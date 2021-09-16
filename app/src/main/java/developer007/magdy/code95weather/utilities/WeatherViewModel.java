@@ -32,11 +32,8 @@ public class WeatherViewModel extends ViewModel {
                         if (response.isSuccessful()) {
                             todayWeatherModuleMutableLiveData.setValue(response.body());
                         } else {
-                            new AlertDialog.Builder(context).setTitle(R.string.error).setMessage(R.string.add_correct_city_name)
-                                    .setPositiveButton(R.string.ok, (dialog, which) -> {
-                                        Log.d(TAG, "onClick: Mgd" + response.message());
-
-                                    }).create().show();
+                            new AlertDialog.Builder(context).setTitle(R.string.error).setMessage(response.message())
+                                    .setPositiveButton(R.string.ok, (dialog, which) -> Log.d(TAG, "onClick: Mgd" + response.message())).create().show();
                         }
 
                     }
@@ -44,12 +41,8 @@ public class WeatherViewModel extends ViewModel {
                     @Override
                     public void onFailure(Call<TodayWeatherModule> call, Throwable t) {
                         Log.d(TAG, "onFailure: Mgd" + t.toString());
-                        new AlertDialog.Builder(context).setTitle(R.string.error).setMessage(R.string.add_correct_city_name)
-                                .setPositiveButton(R.string.ok, (dialog, which) -> {
-                                    Log.d(TAG, "onClick: Mgd" + t.toString());
-
-
-                                }).create().show();
+                        new AlertDialog.Builder(context).setTitle(R.string.error).setMessage(t.getMessage())
+                                .setPositiveButton(R.string.ok, (dialog, which) -> Log.d(TAG, "onClick: Mgd" + t.toString())).create().show();
                     }
                 });
     }
@@ -62,11 +55,8 @@ public class WeatherViewModel extends ViewModel {
                         if (response.isSuccessful()) {
                             foreCastModuleMutableLiveData.setValue(response.body());
                         } else {
-                            new AlertDialog.Builder(context).setTitle(R.string.error).setMessage(R.string.add_correct_city_name)
-                                    .setPositiveButton(R.string.ok, (dialog, which) -> {
-                                        Log.d(TAG, "onClick: Mgd" + response.message());
-
-                                    }).create().show();
+                            new AlertDialog.Builder(context).setTitle(R.string.error).setMessage(response.message())
+                                    .setPositiveButton(R.string.ok, (dialog, which) -> Log.d(TAG, "onClick: Mgd" + response.message())).create().show();
                         }
 
                     }
@@ -74,12 +64,8 @@ public class WeatherViewModel extends ViewModel {
                     @Override
                     public void onFailure(Call<ForeCastModule> call, Throwable t) {
                         Log.d(TAG, "onFailure: Mgd" + t.toString());
-                        new AlertDialog.Builder(context).setTitle(R.string.error).setMessage(R.string.add_correct_city_name)
-                                .setPositiveButton(R.string.ok, (dialog, which) -> {
-                                    Log.d(TAG, "onClick: Mgd" + t.toString());
-
-
-                                }).create().show();
+                        new AlertDialog.Builder(context).setTitle(R.string.error).setMessage(t.getMessage())
+                                .setPositiveButton(R.string.ok, (dialog, which) -> Log.d(TAG, "onClick: Mgd" + t.toString())).create().show();
                     }
                 });
 

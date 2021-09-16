@@ -22,6 +22,7 @@ public class SharedPrefManager {
         editor.remove(key);
         editor.apply();
     }
+
 }
 
 /*

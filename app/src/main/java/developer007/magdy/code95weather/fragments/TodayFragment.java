@@ -1,6 +1,9 @@
 package developer007.magdy.code95weather.fragments;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -10,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -18,6 +22,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -56,6 +62,8 @@ public class TodayFragment extends Fragment {
     ) {
         View view = inflater.inflate(R.layout.fragment_today, container, false);
         compatActivity = (AppCompatActivity) view.getContext();
+
+
         strTodayUnit = SharedPrefManager.getAuthPref(compatActivity).getString("unit", "metric");
         strLocation = SharedPrefManager.getAuthPref(compatActivity).getString("location", "London");
 
@@ -136,6 +144,8 @@ public class TodayFragment extends Fragment {
                 .navigate(R.id.action_TodayFragment_to_SettingFragment));
 
         handlingViewModelNext(strLocation, strTodayUnit, strAppId);
+
+
         return view;
     }
     //handling the view model singular for today
@@ -200,15 +210,5 @@ public class TodayFragment extends Fragment {
         time = sdf.format(dateStart);
         return time;
     }
-/*    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
-        view.findViewById(R.id.button_first).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(TodayFragment.this)
-                        .navigate(R.id.action_HomeFragment_to_SettingFragment);
-            }
-        });
-    }*/
 }
