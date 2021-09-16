@@ -11,17 +11,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import developer007.magdy.code95weather.R;
 import developer007.magdy.code95weather.data.API;
+import developer007.magdy.code95weather.modules.GeographicCoordinates.GeographicCoordinates;
 import developer007.magdy.code95weather.modules.forecast.ForeCastModule;
 
 
-public class ForeCastAdapter extends RecyclerView.Adapter<ForeCastAdapter.ForeCastViewHolder> {
+public class ForeCastGeoAdapter extends RecyclerView.Adapter<ForeCastGeoAdapter.ForeCastViewHolder> {
 
-    private ForeCastModule list = new ForeCastModule();
+    private GeographicCoordinates list = new GeographicCoordinates();
     private String strTimeDate, strTimeDesc, strTimeDegree, strImgTime;
 
     @NonNull
@@ -58,7 +56,7 @@ public class ForeCastAdapter extends RecyclerView.Adapter<ForeCastAdapter.ForeCa
 
     }
 
-    public void setList(ForeCastModule list) {
+    public void setList(GeographicCoordinates list) {
         this.list = list;
         notifyDataSetChanged();
     }

@@ -1,6 +1,7 @@
 package developer007.magdy.code95weather.utilities;
 
 import developer007.magdy.code95weather.data.API;
+import developer007.magdy.code95weather.modules.GeographicCoordinates.GeographicCoordinates;
 import developer007.magdy.code95weather.modules.forecast.ForeCastModule;
 import developer007.magdy.code95weather.modules.weather.TodayWeatherModule;
 import retrofit2.Call;
@@ -37,5 +38,10 @@ public class WeatherClient {
 
     public Call<ForeCastModule> getForecast(String city, String unit, String appId) {
         return weatherInterface.getForecast(city, unit, appId);
+    }
+
+    public Call<GeographicCoordinates> getGeographicCoordinates(double lat, double lon, String unit, String appid) {
+        return weatherInterface.getGeographicCoordinates(lat, lon, unit,appid);
+
     }
 }
