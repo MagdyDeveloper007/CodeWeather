@@ -57,11 +57,8 @@ public class TodayFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_today, container, false);
         compatActivity = (AppCompatActivity) view.getContext();
         strTodayUnit = SharedPrefManager.getAuthPref(compatActivity).getString("unit", "metric");
-        strLocation = SharedPrefManager.getAuthPref(compatActivity).getString("location", "");
-        if (TextUtils.isEmpty(strLocation)) {
-            NavHostFragment.findNavController(this)
-                    .navigate(R.id.action_TodayFragment_to_SettingFragment);
-        }
+        strLocation = SharedPrefManager.getAuthPref(compatActivity).getString("location", "London");
+
         API api = new API();
         strAppId = api.getApId();
         strIconBase = api.getImageURl();
@@ -97,46 +94,36 @@ public class TodayFragment extends Fragment {
             tvTodayMetric.setTextColor(Color.DKGRAY);
             tvTodayImperial.setTextColor(Color.WHITE);
         }
-        tvTodayImperial.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvTodayMetric.setTextColor(Color.DKGRAY);
-                tvTodayImperial.setTextColor(Color.WHITE);
-                strTodayUnit = "imperial";
+        tvTodayImperial.setOnClickListener(v -> {
+            tvTodayMetric.setTextColor(Color.DKGRAY);
+            tvTodayImperial.setTextColor(Color.WHITE);
+            strTodayUnit = "imperial";
 
-                handlingViewModelToday(strLocation, strTodayUnit, strAppId);
-                handlingViewModelNext(strLocation, strTodayUnit, strAppId);
+            handlingViewModelToday(strLocation, strTodayUnit, strAppId);
+            handlingViewModelNext(strLocation, strTodayUnit, strAppId);
 
 
-            }
         });
-        tvTodayMetric.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvTodayMetric.setTextColor(Color.WHITE);
-                tvTodayImperial.setTextColor(Color.DKGRAY);
-                strTodayUnit = "metric";
+        tvTodayMetric.setOnClickListener(v -> {
+            tvTodayMetric.setTextColor(Color.WHITE);
+            tvTodayImperial.setTextColor(Color.DKGRAY);
+            strTodayUnit = "metric";
 
-                handlingViewModelToday(strLocation, strTodayUnit, strAppId);
-                handlingViewModelNext(strLocation, strTodayUnit, strAppId);
+            handlingViewModelToday(strLocation, strTodayUnit, strAppId);
+            handlingViewModelNext(strLocation, strTodayUnit, strAppId);
 
-            }
         });
-        imageLocation.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                progress.setVisibility(View.VISIBLE);
-                strLocation = "";
-                strLocation = etLocation.getText().toString().trim();
+        imageLocation.setOnClickListener(v -> {
+            progress.setVisibility(View.VISIBLE);
+            strLocation = "";
+            strLocation = etLocation.getText().toString().trim();
 
 
-                String todayUnit = SharedPrefManager.getAuthPref(compatActivity).getString("unit", "metric");
-                handlingViewModelToday(strLocation, todayUnit, strAppId);
-                handlingViewModelNext(strLocation, strTodayUnit, strAppId);
+            String todayUnit = SharedPrefManager.getAuthPref(compatActivity).getString("unit", "metric");
+            handlingViewModelToday(strLocation, todayUnit, strAppId);
+            handlingViewModelNext(strLocation, strTodayUnit, strAppId);
 
 
-            }
         });
 
 
@@ -145,13 +132,8 @@ public class TodayFragment extends Fragment {
         handlingViewModelToday(strLocation, strTodayUnit, strAppId);
 
 
-        imageSetting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NavHostFragment.findNavController(TodayFragment.this)
-                        .navigate(R.id.action_TodayFragment_to_SettingFragment);
-            }
-        });
+        imageSetting.setOnClickListener(v -> NavHostFragment.findNavController(TodayFragment.this)
+                .navigate(R.id.action_TodayFragment_to_SettingFragment));
 
         handlingViewModelNext(strLocation, strTodayUnit, strAppId);
         return view;
@@ -165,34 +147,31 @@ public class TodayFragment extends Fragment {
 
         weatherViewModel.getTodayWeather(location, todayUnit, appId, compatActivity);
 
-        weatherViewModel.todayWeatherModuleMutableLiveData.observe(compatActivity, new Observer<TodayWeatherModule>() {
-            @Override
-            public void onChanged(TodayWeatherModule todayWeatherModule) {
-                strImageIcon = strIconBase + todayWeatherModule.getWeather().get(0).getIcon() + strIconExt;
-                strTodayDegree = todayWeatherModule.getMain().getTemp() + getString(R.string.degree);
-                strTodayDesc = todayWeatherModule.getWeather().get(0).getDescription();
-                strTodayDate = todayWeatherModule.getDt();
-                String date = "Last Update on: " + handlingDate(strTodayDate);
-                feels_like = getString(R.string.feel_like) + " " + todayWeatherModule.getMain().getFeels_like() + getString(R.string.degree);
-                temp_min = todayWeatherModule.getMain().getTemp_min() + getString(R.string.degree);
-                temp_max = todayWeatherModule.getMain().getTemp_max() + getString(R.string.degree);
-                humidity = todayWeatherModule.getMain().getHumidity() + getString(R.string.percent);
-                strSpeed = todayWeatherModule.getWind().getSpeed() + " " + getString(R.string.km_h);
-                strMinMax = (int) (todayWeatherModule.getMain().getTemp_min() - 2) + getString(R.string.degree)
-                        + "/" + (int) todayWeatherModule.getMain().getTemp_max() + getString(R.string.degree);
+        weatherViewModel.todayWeatherModuleMutableLiveData.observe(compatActivity, todayWeatherModule -> {
+            strImageIcon = strIconBase + todayWeatherModule.getWeather().get(0).getIcon() + strIconExt;
+            strTodayDegree = todayWeatherModule.getMain().getTemp() + getString(R.string.degree);
+            strTodayDesc = todayWeatherModule.getWeather().get(0).getDescription();
+            strTodayDate = todayWeatherModule.getDt();
+            String date = "Last Update on: " + handlingDate(strTodayDate);
+            feels_like = getString(R.string.feel_like) + " " + todayWeatherModule.getMain().getFeels_like() + getString(R.string.degree);
+            temp_min = todayWeatherModule.getMain().getTemp_min() + getString(R.string.degree);
+            temp_max = todayWeatherModule.getMain().getTemp_max() + getString(R.string.degree);
+            humidity = todayWeatherModule.getMain().getHumidity() + getString(R.string.percent);
+            strSpeed = todayWeatherModule.getWind().getSpeed() + " " + getString(R.string.km_h);
+            strMinMax = (int) (todayWeatherModule.getMain().getTemp_min() - 2) + getString(R.string.degree)
+                    + "/" + (int) todayWeatherModule.getMain().getTemp_max() + getString(R.string.degree);
 
-                tvTodayMinMax.setText(strMinMax);
-                tvTodayHum.setText(humidity);
-                tvTodayWind.setText(strSpeed);
-                tvTodayFeelLike.setText(feels_like);
-                tvTodayDate.setText(date);
-                Picasso.get().load(strImageIcon).into(imgToday);
-                tvTodayDegree.setText(strTodayDegree);
-                tvTodayDesc.setText(strTodayDesc);
-                progress.setVisibility(View.GONE);
+            tvTodayMinMax.setText(strMinMax);
+            tvTodayHum.setText(humidity);
+            tvTodayWind.setText(strSpeed);
+            tvTodayFeelLike.setText(feels_like);
+            tvTodayDate.setText(date);
+            Picasso.get().load(strImageIcon).into(imgToday);
+            tvTodayDegree.setText(strTodayDegree);
+            tvTodayDesc.setText(strTodayDesc);
+            progress.setVisibility(View.GONE);
 
 
-            }
         });
     }
 
@@ -204,14 +183,11 @@ public class TodayFragment extends Fragment {
         weatherViewModel = new ViewModelProvider(compatActivity).get(WeatherViewModel.class);
 
         weatherViewModel.getForecast(location, todayUnit, appId, compatActivity);
-        weatherViewModel.foreCastModuleMutableLiveData.observe(compatActivity, new Observer<ForeCastModule>() {
-            @Override
-            public void onChanged(ForeCastModule foreCastModule) {
-                foreCastAdapter.setList(foreCastModule);
-                foreCastAdapter.notifyDataSetChanged();
-                progress.setVisibility(View.GONE);
+        weatherViewModel.foreCastModuleMutableLiveData.observe(compatActivity, foreCastModule -> {
+            foreCastAdapter.setList(foreCastModule);
+            foreCastAdapter.notifyDataSetChanged();
+            progress.setVisibility(View.GONE);
 
-            }
         });
 
     }
@@ -220,7 +196,7 @@ public class TodayFragment extends Fragment {
     public String handlingDate(long dateTime) {
         String time = "";
         Date dateStart = new Date(dateTime * 1000);
-        SimpleDateFormat sdf = new SimpleDateFormat("KK:mm a - YYYY/MM/dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("KK:mm a - yyyy/MM/dd");
         time = sdf.format(dateStart);
         return time;
     }

@@ -33,6 +33,7 @@
     <string name="please_update">Please update the app</string>
     <string name="saved">Saved</string>
     <string name="shared_city">London</string>
-    <string name="city_option">City (option):</string>
+    <string name="city_option">City (*):</string>
     <string name="add_correct_city_name">Result: Add the correct city name.</string>
+    <string name="optional">*Optional</string>
 </resources>
