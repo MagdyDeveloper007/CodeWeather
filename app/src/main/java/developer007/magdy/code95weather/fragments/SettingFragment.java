@@ -12,7 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,8 +27,9 @@ public class SettingFragment extends Fragment {
 
     private EditText etCity, etCity1, etCity2, etCity3, etCity4;
     private TextView tvSettingMetric, tvSettingImperial;
-    private LinearLayout layoutBackHome, layoutExit, layoutSet;
+    private TextView tvBackHome, tvExit, tvSet;
     private String strCity, strCity1, strCity2, strCity3, strCity4, strUnit;
+    private ImageButton imgBtnDel1, imgBtnDel2, imgBtnDel3, imgBtnDel4;
 
     @Override
     public View onCreateView(
@@ -44,11 +45,15 @@ public class SettingFragment extends Fragment {
         etCity2 = view.findViewById(R.id.etCity2);
         etCity3 = view.findViewById(R.id.etCity3);
         etCity4 = view.findViewById(R.id.etCity4);
+        imgBtnDel1 = view.findViewById(R.id.imgBtnDel1);
+        imgBtnDel2 = view.findViewById(R.id.imgBtnDel2);
+        imgBtnDel3 = view.findViewById(R.id.imgBtnDel3);
+        imgBtnDel4 = view.findViewById(R.id.imgBtnDel4);
         tvSettingMetric = view.findViewById(R.id.tvSettingMetric);
         tvSettingImperial = view.findViewById(R.id.tvSettingImperial);
-        layoutBackHome = view.findViewById(R.id.layoutBackHome);
-        layoutExit = view.findViewById(R.id.layoutExit);
-        layoutSet = view.findViewById(R.id.layoutSet);
+        tvBackHome = view.findViewById(R.id.tvBackHome);
+        tvExit = view.findViewById(R.id.tvExit);
+        tvSet = view.findViewById(R.id.tvSet);
 
         strUnit = SharedPrefManager.getAuthPref(compatActivity).getString("unit", "metric");
         strCity = SharedPrefManager.getAuthPref(compatActivity).getString("location", "");
@@ -72,115 +77,86 @@ public class SettingFragment extends Fragment {
 
 
         // set to Imperial unit
-        tvSettingImperial.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvSettingMetric.setTextColor(Color.DKGRAY);
-                tvSettingImperial.setTextColor(Color.WHITE);
-                strUnit = "imperial";
-                SharedPrefManager.setAuthVal(compatActivity, "unit", strUnit);
+        tvSettingImperial.setOnClickListener(v -> {
+            tvSettingMetric.setTextColor(Color.DKGRAY);
+            tvSettingImperial.setTextColor(Color.WHITE);
+            strUnit = "imperial";
+            SharedPrefManager.setAuthVal(compatActivity, "unit", strUnit);
+            tvSet.setClickable(true);
 
-            }
+
         });
         //set to metric unit
-        tvSettingMetric.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvSettingMetric.setTextColor(Color.WHITE);
-                tvSettingImperial.setTextColor(Color.DKGRAY);
-                strUnit = "metric";
-                SharedPrefManager.setAuthVal(compatActivity, "unit", strUnit);
-            }
+        tvSettingMetric.setOnClickListener(v -> {
+            tvSettingMetric.setTextColor(Color.WHITE);
+            tvSettingImperial.setTextColor(Color.DKGRAY);
+            strUnit = "metric";
+            SharedPrefManager.setAuthVal(compatActivity, "unit", strUnit);
+            tvSet.setClickable(true);
+
         });
 
         //check to go back home page
-        layoutBackHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                layoutSet.setClickable(true);
+        tvBackHome.setOnClickListener(v -> {
+            tvSet.setClickable(true);
 
-                if (TextUtils.isEmpty(strCity)) {
-                    new AlertDialog.Builder(compatActivity).setTitle(R.string.error).setMessage(R.string.enter_location)
-                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    etCity.setFocusable(true);
+            if (TextUtils.isEmpty(strCity)) {
+                new AlertDialog.Builder(compatActivity).setTitle(R.string.error).setMessage(R.string.enter_location)
+                        .setPositiveButton(R.string.ok, (dialog, which) -> etCity.setFocusable(true)).create().show();
+                tvSet.setClickable(true);
 
-                                }
-                            }).create().show();
-                    layoutSet.setClickable(true);
-
-                    return;
-                }
-                layoutSet.setClickable(false);
-
-                NavHostFragment.findNavController(SettingFragment.this)
-                        .navigate(R.id.action_SettingFragment_to_TodayFragment);
+                return;
             }
+            tvSet.setClickable(false);
+
+            NavHostFragment.findNavController(SettingFragment.this)
+                    .navigate(R.id.action_SettingFragment_to_TodayFragment);
         });
         //exit the app
-        layoutExit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().finish();
-            }
-        });
+        tvExit.setOnClickListener(v -> getActivity().finish());
 
 //set the desired setting for the default city
-        layoutSet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                strCity = etCity.getText().toString().trim();
-                strCity1 = etCity1.getText().toString().trim();
-                strCity2 = etCity2.getText().toString().trim();
-                strCity3 = etCity3.getText().toString().trim();
-                strCity4 = etCity4.getText().toString().trim();
+        tvSet.setOnClickListener(v -> {
+            strCity = etCity.getText().toString().trim();
+            strCity1 = etCity1.getText().toString().trim();
+            strCity2 = etCity2.getText().toString().trim();
+            strCity3 = etCity3.getText().toString().trim();
+            strCity4 = etCity4.getText().toString().trim();
 
-                layoutSet.setClickable(true);
-                if (TextUtils.isEmpty(strCity)) {
-                    new AlertDialog.Builder(compatActivity).setTitle(R.string.error).setMessage(R.string.enter_location)
-                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    etCity.setFocusable(true);
+            tvSet.setClickable(true);
+            if (TextUtils.isEmpty(strCity)) {
+                new AlertDialog.Builder(compatActivity).setTitle(R.string.error).setMessage(R.string.enter_location)
+                        .setPositiveButton(R.string.ok, (dialog, which) -> etCity.setFocusable(true)).create().show();
+                tvSet.setClickable(true);
 
-                                }
-                            }).create().show();
-                    layoutSet.setClickable(true);
+                return;
+            }
 
-                    return;
-                }
-
-                if (!TextUtils.isEmpty(strCity1)) {
-                    setCityToUC(strCity1, compatActivity, "1");
-                }
-                if (!TextUtils.isEmpty(strCity2)) {
-                    setCityToUC(strCity2, compatActivity, "2");
-
-                }
-                if (!TextUtils.isEmpty(strCity3)) {
-                    setCityToUC(strCity3, compatActivity, "3");
-
-                }
-                if (!TextUtils.isEmpty(strCity4)) {
-                    setCityToUC(strCity4, compatActivity, "4");
-
-                }
-
-                layoutSet.setClickable(false);
-//save city and unit
-                strUnit = SharedPrefManager.getAuthPref(compatActivity).getString("unit", "metric");
-                //fix the saved city by setting the first letter as an upper case letter for better view
-                setCityToUC(strCity, compatActivity, "");
-/*
-                String toUCFirst = strCity.substring(0, 1).toUpperCase() + strCity.substring(1).toLowerCase();
-
-                SharedPrefManager.setAuthVal(compatActivity, "location", toUCFirst);
-*/
-                SharedPrefManager.setAuthVal(compatActivity, "unit", strUnit);
-                Toast.makeText(compatActivity, R.string.saved, Toast.LENGTH_SHORT).show();
+            if (!TextUtils.isEmpty(strCity1)) {
+                setCityToUC(strCity1, compatActivity, "1");
+            }
+            if (!TextUtils.isEmpty(strCity2)) {
+                setCityToUC(strCity2, compatActivity, "2");
 
             }
+            if (!TextUtils.isEmpty(strCity3)) {
+                setCityToUC(strCity3, compatActivity, "3");
+
+            }
+            if (!TextUtils.isEmpty(strCity4)) {
+                setCityToUC(strCity4, compatActivity, "4");
+
+            }
+
+            tvSet.setClickable(false);
+//save city and unit
+            strUnit = SharedPrefManager.getAuthPref(compatActivity).getString("unit", "metric");
+            //fix the saved city by setting the first letter as an upper case letter for better view
+            setCityToUC(strCity, compatActivity, "");
+
+            SharedPrefManager.setAuthVal(compatActivity, "unit", strUnit);
+            Toast.makeText(compatActivity, R.string.saved, Toast.LENGTH_SHORT).show();
+
         });
 
 //unfreeze any freezed button
@@ -192,7 +168,7 @@ public class SettingFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                layoutSet.setClickable(true);
+                tvSet.setClickable(true);
 
             }
 
@@ -209,7 +185,7 @@ public class SettingFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                layoutSet.setClickable(true);
+                tvSet.setClickable(true);
 
             }
 
@@ -226,7 +202,7 @@ public class SettingFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                layoutSet.setClickable(true);
+                tvSet.setClickable(true);
 
             }
 
@@ -243,7 +219,7 @@ public class SettingFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                layoutSet.setClickable(true);
+                tvSet.setClickable(true);
 
             }
 
@@ -260,7 +236,7 @@ public class SettingFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                layoutSet.setClickable(true);
+                tvSet.setClickable(true);
 
             }
 
@@ -269,6 +245,28 @@ public class SettingFragment extends Fragment {
 
             }
         });
+
+        //Allow deleting cities
+        imgBtnDel1.setOnClickListener(v -> {
+            SharedPrefManager.deleteAuthVal(compatActivity, "location1");
+            etCity1.setText("");
+        });
+        imgBtnDel2.setOnClickListener(v -> {
+            SharedPrefManager.deleteAuthVal(compatActivity, "location2");
+            etCity2.setText("");
+
+        });
+        imgBtnDel3.setOnClickListener(v -> {
+            SharedPrefManager.deleteAuthVal(compatActivity, "location3");
+            etCity3.setText("");
+
+        });
+        imgBtnDel4.setOnClickListener(v -> {
+            SharedPrefManager.deleteAuthVal(compatActivity, "location4");
+            etCity4.setText("");
+
+        });
+
         return view;
     }
 

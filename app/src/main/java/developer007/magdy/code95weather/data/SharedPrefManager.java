@@ -5,9 +5,8 @@ import android.content.SharedPreferences;
 
 public class SharedPrefManager {
     public static SharedPreferences getAuthPref(Context mContext) {
-        SharedPreferences pref = mContext.getSharedPreferences("settings", Context.MODE_PRIVATE);
 
-        return pref;
+        return mContext.getSharedPreferences("settings", Context.MODE_PRIVATE);
     }
 
     public static void setAuthVal(Context mContext, String key, String value) {
@@ -17,6 +16,13 @@ public class SharedPrefManager {
             authEdit.apply();
         }
     }
+
+    public static void deleteAuthVal(Context mContext, String key) {
+        SharedPreferences.Editor editor = getAuthPref(mContext).edit();
+        editor.remove(key);
+        editor.apply();
+    }
+
 }
 
 /*

@@ -33,6 +33,11 @@
     <string name="please_update">Please update the app</string>
     <string name="saved">Saved</string>
     <string name="shared_city">London</string>
-    <string name="city_option">City (option):</string>
+    <string name="city_option">City (*):</string>
     <string name="add_correct_city_name">Result: Add the correct city name.</string>
+    <string name="optional">*Optional</string>
+    <string name="checking_the_connection_again">Press here to check the connection again?</string>
+    <string name="back_online">Back online</string>
+    <string name="disconnected">You are disconnected</string>
+    <string name="last_update_on">Last update on:</string>
 </resources>

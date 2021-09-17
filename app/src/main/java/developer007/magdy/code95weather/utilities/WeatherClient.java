@@ -38,4 +38,6 @@ public class WeatherClient {
     public Call<ForeCastModule> getForecast(String city, String unit, String appId) {
         return weatherInterface.getForecast(city, unit, appId);
     }
+
+
 }

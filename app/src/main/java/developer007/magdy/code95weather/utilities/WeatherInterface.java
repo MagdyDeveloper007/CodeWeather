@@ -16,4 +16,6 @@ public interface WeatherInterface {
     public Call<ForeCastModule> getForecast(@Query("q") String city,
                                             @Query("units") String unit,
                                             @Query("appid") String appId);
+
+
 }

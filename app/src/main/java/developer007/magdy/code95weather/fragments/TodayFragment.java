@@ -1,6 +1,9 @@
 package developer007.magdy.code95weather.fragments;
 
+
 import android.graphics.Color;
+
+
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,7 +16,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,12 +29,14 @@ import developer007.magdy.code95weather.R;
 import developer007.magdy.code95weather.adapters.ForeCastAdapter;
 import developer007.magdy.code95weather.data.API;
 import developer007.magdy.code95weather.data.SharedPrefManager;
-import developer007.magdy.code95weather.modules.forecast.ForeCastModule;
-import developer007.magdy.code95weather.modules.weather.TodayWeatherModule;
+
 import developer007.magdy.code95weather.utilities.WeatherViewModel;
 import pl.droidsonroids.gif.GifImageView;
 
+
 public class TodayFragment extends Fragment {
+
+
     private TextView tvTodayMetric, tvTodayImperial, tvTodayDegree, tvTodayDesc,
             tvTodayDate, tvTodayFeelLike, tvTodayHum, tvTodayWind, tvTodayMinMax;
     private EditText etLocation;
@@ -56,12 +60,11 @@ public class TodayFragment extends Fragment {
     ) {
         View view = inflater.inflate(R.layout.fragment_today, container, false);
         compatActivity = (AppCompatActivity) view.getContext();
+
+
         strTodayUnit = SharedPrefManager.getAuthPref(compatActivity).getString("unit", "metric");
         strLocation = SharedPrefManager.getAuthPref(compatActivity).getString("location", "");
-        if (TextUtils.isEmpty(strLocation)) {
-            NavHostFragment.findNavController(this)
-                    .navigate(R.id.action_TodayFragment_to_SettingFragment);
-        }
+
         API api = new API();
         strAppId = api.getApId();
         strIconBase = api.getImageURl();
@@ -97,63 +100,72 @@ public class TodayFragment extends Fragment {
             tvTodayMetric.setTextColor(Color.DKGRAY);
             tvTodayImperial.setTextColor(Color.WHITE);
         }
-        tvTodayImperial.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvTodayMetric.setTextColor(Color.DKGRAY);
-                tvTodayImperial.setTextColor(Color.WHITE);
-                strTodayUnit = "imperial";
+        tvTodayImperial.setOnClickListener(v -> {
+            tvTodayMetric.setTextColor(Color.DKGRAY);
+            tvTodayImperial.setTextColor(Color.WHITE);
+            strTodayUnit = "imperial";
 
-                handlingViewModelToday(strLocation, strTodayUnit, strAppId);
-                handlingViewModelNext(strLocation, strTodayUnit, strAppId);
+            if (TextUtils.isEmpty(strLocation)) {
 
-
-            }
-        });
-        tvTodayMetric.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvTodayMetric.setTextColor(Color.WHITE);
-                tvTodayImperial.setTextColor(Color.DKGRAY);
-                strTodayUnit = "metric";
-
-                handlingViewModelToday(strLocation, strTodayUnit, strAppId);
-                handlingViewModelNext(strLocation, strTodayUnit, strAppId);
-
-            }
-        });
-        imageLocation.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                progress.setVisibility(View.VISIBLE);
-                strLocation = "";
-                strLocation = etLocation.getText().toString().trim();
-
-
-                String todayUnit = SharedPrefManager.getAuthPref(compatActivity).getString("unit", "metric");
-                handlingViewModelToday(strLocation, todayUnit, strAppId);
-                handlingViewModelNext(strLocation, strTodayUnit, strAppId);
-
-
-            }
-        });
-
-
-        recyclerTime.setAdapter(foreCastAdapter);
-
-        handlingViewModelToday(strLocation, strTodayUnit, strAppId);
-
-
-        imageSetting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 NavHostFragment.findNavController(TodayFragment.this)
                         .navigate(R.id.action_TodayFragment_to_SettingFragment);
+            } else {
+                recyclerTime.setAdapter(foreCastAdapter);
+                handlingViewModelToday(strLocation, strTodayUnit, strAppId);
+                handlingViewModelNext(strLocation, strTodayUnit, strAppId);
             }
+
+
+        });
+        tvTodayMetric.setOnClickListener(v -> {
+            tvTodayMetric.setTextColor(Color.WHITE);
+            tvTodayImperial.setTextColor(Color.DKGRAY);
+            strTodayUnit = "metric";
+
+            if (TextUtils.isEmpty(strLocation)) {
+                NavHostFragment.findNavController(TodayFragment.this)
+                        .navigate(R.id.action_TodayFragment_to_SettingFragment);
+
+            } else {
+                recyclerTime.setAdapter(foreCastAdapter);
+                handlingViewModelToday(strLocation, strTodayUnit, strAppId);
+                handlingViewModelNext(strLocation, strTodayUnit, strAppId);
+            }
+
+        });
+        imageLocation.setOnClickListener(v -> {
+            progress.setVisibility(View.VISIBLE);
+            strLocation = "";
+            strLocation = etLocation.getText().toString().trim();
+
+            if (TextUtils.isEmpty(strLocation)) {
+                NavHostFragment.findNavController(TodayFragment.this)
+                        .navigate(R.id.action_TodayFragment_to_SettingFragment);
+
+            } else {
+                recyclerTime.setAdapter(foreCastAdapter);
+                handlingViewModelToday(strLocation, strTodayUnit, strAppId);
+                handlingViewModelNext(strLocation, strTodayUnit, strAppId);
+            }
+
+
         });
 
-        handlingViewModelNext(strLocation, strTodayUnit, strAppId);
+
+        imageSetting.setOnClickListener(v -> NavHostFragment.findNavController(TodayFragment.this)
+                .navigate(R.id.action_TodayFragment_to_SettingFragment));
+
+        if (TextUtils.isEmpty(strLocation)) {
+            NavHostFragment.findNavController(TodayFragment.this)
+                    .navigate(R.id.action_TodayFragment_to_SettingFragment);
+
+        } else {
+            recyclerTime.setAdapter(foreCastAdapter);
+            handlingViewModelToday(strLocation, strTodayUnit, strAppId);
+            handlingViewModelNext(strLocation, strTodayUnit, strAppId);
+        }
+
+
         return view;
     }
     //handling the view model singular for today
@@ -165,34 +177,31 @@ public class TodayFragment extends Fragment {
 
         weatherViewModel.getTodayWeather(location, todayUnit, appId, compatActivity);
 
-        weatherViewModel.todayWeatherModuleMutableLiveData.observe(compatActivity, new Observer<TodayWeatherModule>() {
-            @Override
-            public void onChanged(TodayWeatherModule todayWeatherModule) {
-                strImageIcon = strIconBase + todayWeatherModule.getWeather().get(0).getIcon() + strIconExt;
-                strTodayDegree = todayWeatherModule.getMain().getTemp() + getString(R.string.degree);
-                strTodayDesc = todayWeatherModule.getWeather().get(0).getDescription();
-                strTodayDate = todayWeatherModule.getDt();
-                String date = "Last Update on: " + handlingDate(strTodayDate);
-                feels_like = getString(R.string.feel_like) + " " + todayWeatherModule.getMain().getFeels_like() + getString(R.string.degree);
-                temp_min = todayWeatherModule.getMain().getTemp_min() + getString(R.string.degree);
-                temp_max = todayWeatherModule.getMain().getTemp_max() + getString(R.string.degree);
-                humidity = todayWeatherModule.getMain().getHumidity() + getString(R.string.percent);
-                strSpeed = todayWeatherModule.getWind().getSpeed() + " " + getString(R.string.km_h);
-                strMinMax = (int) (todayWeatherModule.getMain().getTemp_min() - 2) + getString(R.string.degree)
-                        + "/" + (int) todayWeatherModule.getMain().getTemp_max() + getString(R.string.degree);
+        weatherViewModel.todayWeatherModuleMutableLiveData.observe(compatActivity, todayWeatherModule -> {
+            strImageIcon = strIconBase + todayWeatherModule.getWeather().get(0).getIcon() + strIconExt;
+            strTodayDegree = todayWeatherModule.getMain().getTemp() + getString(R.string.degree);
+            strTodayDesc = todayWeatherModule.getWeather().get(0).getDescription();
+            strTodayDate = todayWeatherModule.getDt();
+            String date = getString(R.string.last_update_on) + " " + handlingDate(strTodayDate);
+            feels_like = getString(R.string.feel_like) + " " + todayWeatherModule.getMain().getFeels_like() + getString(R.string.degree);
+            temp_min = todayWeatherModule.getMain().getTemp_min() + getString(R.string.degree);
+            temp_max = todayWeatherModule.getMain().getTemp_max() + getString(R.string.degree);
+            humidity = todayWeatherModule.getMain().getHumidity() + getString(R.string.percent);
+            strSpeed = todayWeatherModule.getWind().getSpeed() + " " + getString(R.string.km_h);
+            strMinMax = (int) (todayWeatherModule.getMain().getTemp_min() - 2) + getString(R.string.degree)
+                    + "/" + (int) todayWeatherModule.getMain().getTemp_max() + getString(R.string.degree);
 
-                tvTodayMinMax.setText(strMinMax);
-                tvTodayHum.setText(humidity);
-                tvTodayWind.setText(strSpeed);
-                tvTodayFeelLike.setText(feels_like);
-                tvTodayDate.setText(date);
-                Picasso.get().load(strImageIcon).into(imgToday);
-                tvTodayDegree.setText(strTodayDegree);
-                tvTodayDesc.setText(strTodayDesc);
-                progress.setVisibility(View.GONE);
+            tvTodayMinMax.setText(strMinMax);
+            tvTodayHum.setText(humidity);
+            tvTodayWind.setText(strSpeed);
+            tvTodayFeelLike.setText(feels_like);
+            tvTodayDate.setText(date);
+            Picasso.get().load(strImageIcon).into(imgToday);
+            tvTodayDegree.setText(strTodayDegree);
+            tvTodayDesc.setText(strTodayDesc);
+            progress.setVisibility(View.GONE);
 
 
-            }
         });
     }
 
@@ -204,35 +213,26 @@ public class TodayFragment extends Fragment {
         weatherViewModel = new ViewModelProvider(compatActivity).get(WeatherViewModel.class);
 
         weatherViewModel.getForecast(location, todayUnit, appId, compatActivity);
-        weatherViewModel.foreCastModuleMutableLiveData.observe(compatActivity, new Observer<ForeCastModule>() {
-            @Override
-            public void onChanged(ForeCastModule foreCastModule) {
-                foreCastAdapter.setList(foreCastModule);
-                foreCastAdapter.notifyDataSetChanged();
-                progress.setVisibility(View.GONE);
+        weatherViewModel.foreCastModuleMutableLiveData.observe(compatActivity, foreCastModule -> {
+            foreCastAdapter.setList(foreCastModule);
+            foreCastAdapter.notifyDataSetChanged();
+            progress.setVisibility(View.GONE);
 
-            }
         });
 
     }
+
 
     //handling the date format
     public String handlingDate(long dateTime) {
         String time = "";
         Date dateStart = new Date(dateTime * 1000);
-        SimpleDateFormat sdf = new SimpleDateFormat("KK:mm a - YYYY/MM/dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("KK:mm a - yyyy/MM/dd");
         time = sdf.format(dateStart);
         return time;
     }
-/*    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
-        view.findViewById(R.id.button_first).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(TodayFragment.this)
-                        .navigate(R.id.action_HomeFragment_to_SettingFragment);
-            }
-        });
-    }*/
+
+    //29.99768170083821, 31.1504855971676
+
 }

@@ -77,16 +77,6 @@ public class ForeCastAdapter extends RecyclerView.Adapter<ForeCastAdapter.ForeCa
         }
     }
 
-    public String handlingDateTime(long date) {
-        String dates = "";
-        Date dateStart = new Date(date * 1000);
-        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd");
-        dates = sdf.format(dateStart);
-
-        return dates;
-
-
-    }
 
     public String handlingImage(String imageCode) {
         String strImage = "";
