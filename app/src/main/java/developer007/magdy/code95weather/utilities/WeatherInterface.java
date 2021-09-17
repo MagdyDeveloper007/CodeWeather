@@ -1,6 +1,5 @@
 package developer007.magdy.code95weather.utilities;
 
-import developer007.magdy.code95weather.modules.GeographicCoordinates.GeographicCoordinates;
 import developer007.magdy.code95weather.modules.forecast.ForeCastModule;
 import developer007.magdy.code95weather.modules.weather.TodayWeatherModule;
 import retrofit2.Call;
@@ -17,12 +16,6 @@ public interface WeatherInterface {
     public Call<ForeCastModule> getForecast(@Query("q") String city,
                                             @Query("units") String unit,
                                             @Query("appid") String appId);
-
-    @GET("forecast")
-    public Call<GeographicCoordinates> getGeographicCoordinates(@Query("lat") double lat,
-                                                                @Query("lon") double lon,
-                                                                @Query("units") String unit,
-                                                                @Query("appid") String appid);
 
 
 }

@@ -1,13 +1,9 @@
 package developer007.magdy.code95weather.fragments;
 
-import android.Manifest;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.pm.PackageManager;
+
 import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+
+
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -17,21 +13,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -39,16 +27,16 @@ import java.util.Date;
 
 import developer007.magdy.code95weather.R;
 import developer007.magdy.code95weather.adapters.ForeCastAdapter;
-import developer007.magdy.code95weather.adapters.ForeCastGeoAdapter;
 import developer007.magdy.code95weather.data.API;
 import developer007.magdy.code95weather.data.SharedPrefManager;
-import developer007.magdy.code95weather.modules.GeographicCoordinates.GeographicCoordinates;
-import developer007.magdy.code95weather.modules.forecast.ForeCastModule;
-import developer007.magdy.code95weather.modules.weather.TodayWeatherModule;
+
 import developer007.magdy.code95weather.utilities.WeatherViewModel;
 import pl.droidsonroids.gif.GifImageView;
 
+
 public class TodayFragment extends Fragment {
+
+
     private TextView tvTodayMetric, tvTodayImperial, tvTodayDegree, tvTodayDesc,
             tvTodayDate, tvTodayFeelLike, tvTodayHum, tvTodayWind, tvTodayMinMax;
     private EditText etLocation;
@@ -64,7 +52,6 @@ public class TodayFragment extends Fragment {
     private AppCompatActivity compatActivity;
     private static final String TAG = "TodayFragment";
     private ForeCastAdapter foreCastAdapter;
-    private ForeCastGeoAdapter foreCastGeoAdapter;
 
     @Override
     public View onCreateView(
@@ -73,6 +60,7 @@ public class TodayFragment extends Fragment {
     ) {
         View view = inflater.inflate(R.layout.fragment_today, container, false);
         compatActivity = (AppCompatActivity) view.getContext();
+
 
         strTodayUnit = SharedPrefManager.getAuthPref(compatActivity).getString("unit", "metric");
         strLocation = SharedPrefManager.getAuthPref(compatActivity).getString("location", "");
@@ -102,7 +90,6 @@ public class TodayFragment extends Fragment {
 
 
         foreCastAdapter = new ForeCastAdapter();
-        foreCastGeoAdapter = new ForeCastGeoAdapter();
 
 
         etLocation.setText(strLocation);
@@ -119,9 +106,9 @@ public class TodayFragment extends Fragment {
             strTodayUnit = "imperial";
 
             if (TextUtils.isEmpty(strLocation)) {
-                recyclerTime.setAdapter(foreCastGeoAdapter);
-                handlingViewModelGeo(29.99768170083821, 31.1504855971676, strTodayUnit, strAppId);
-                handlingViewModelNextGeo(29.99768170083821, 31.1504855971676, strTodayUnit, strAppId);
+
+                NavHostFragment.findNavController(TodayFragment.this)
+                        .navigate(R.id.action_TodayFragment_to_SettingFragment);
             } else {
                 recyclerTime.setAdapter(foreCastAdapter);
                 handlingViewModelToday(strLocation, strTodayUnit, strAppId);
@@ -136,9 +123,8 @@ public class TodayFragment extends Fragment {
             strTodayUnit = "metric";
 
             if (TextUtils.isEmpty(strLocation)) {
-                recyclerTime.setAdapter(foreCastGeoAdapter);
-                handlingViewModelGeo(29.99768170083821, 31.1504855971676, strTodayUnit, strAppId);
-                handlingViewModelNextGeo(29.99768170083821, 31.1504855971676, strTodayUnit, strAppId);
+                NavHostFragment.findNavController(TodayFragment.this)
+                        .navigate(R.id.action_TodayFragment_to_SettingFragment);
 
             } else {
                 recyclerTime.setAdapter(foreCastAdapter);
@@ -152,12 +138,9 @@ public class TodayFragment extends Fragment {
             strLocation = "";
             strLocation = etLocation.getText().toString().trim();
 
-
-            String todayUnit = SharedPrefManager.getAuthPref(compatActivity).getString("unit", "metric");
             if (TextUtils.isEmpty(strLocation)) {
-                recyclerTime.setAdapter(foreCastGeoAdapter);
-                handlingViewModelGeo(29.99768170083821, 31.1504855971676, strTodayUnit, strAppId);
-                handlingViewModelNextGeo(29.99768170083821, 31.1504855971676, strTodayUnit, strAppId);
+                NavHostFragment.findNavController(TodayFragment.this)
+                        .navigate(R.id.action_TodayFragment_to_SettingFragment);
 
             } else {
                 recyclerTime.setAdapter(foreCastAdapter);
@@ -173,9 +156,8 @@ public class TodayFragment extends Fragment {
                 .navigate(R.id.action_TodayFragment_to_SettingFragment));
 
         if (TextUtils.isEmpty(strLocation)) {
-            recyclerTime.setAdapter(foreCastGeoAdapter);
-            handlingViewModelGeo(29.99768170083821, 31.1504855971676, strTodayUnit, strAppId);
-            handlingViewModelNextGeo(29.99768170083821, 31.1504855971676, strTodayUnit, strAppId);
+            NavHostFragment.findNavController(TodayFragment.this)
+                    .navigate(R.id.action_TodayFragment_to_SettingFragment);
 
         } else {
             recyclerTime.setAdapter(foreCastAdapter);
@@ -240,58 +222,6 @@ public class TodayFragment extends Fragment {
 
     }
 
-    public void handlingViewModelGeo(double lat, double lon, String todayUnit, String appid) {
-
-        progress.setVisibility(View.VISIBLE);
-
-        weatherViewModel = new ViewModelProvider(compatActivity).get(WeatherViewModel.class);
-        weatherViewModel.getGeographicCoordinates(lat, lon, todayUnit, appid, compatActivity);
-        weatherViewModel.geographicCoordinatesMutableLiveData.observe(compatActivity, new Observer<GeographicCoordinates>() {
-            @Override
-            public void onChanged(GeographicCoordinates geographicCoordinates) {
-                String city = geographicCoordinates.getCity().getName();
-                etLocation.setText(city);
-                SharedPrefManager.setAuthVal(compatActivity, "location", city);
-                strImageIcon = strIconBase + geographicCoordinates.getList().get(0).getWeather().get(0).getIcon() + strIconExt;
-                strTodayDegree = geographicCoordinates.getList().get(0).getMain().getTemp() + getString(R.string.degree);
-                strTodayDesc = geographicCoordinates.getList().get(0).getWeather().get(0).getDescription();
-                strTodayDate = geographicCoordinates.getList().get(0).getDt();
-                String date = getString(R.string.last_update_on) + " " + handlingDate(strTodayDate);
-                feels_like = getString(R.string.feel_like) + " " + geographicCoordinates.getList().get(0).getMain().getFeels_like() + getString(R.string.degree);
-                temp_min = geographicCoordinates.getList().get(0).getMain().getTemp_min() + getString(R.string.degree);
-                temp_max = geographicCoordinates.getList().get(0).getMain().getTemp_max() + getString(R.string.degree);
-                humidity = geographicCoordinates.getList().get(0).getMain().getHumidity() + getString(R.string.percent);
-                strSpeed = geographicCoordinates.getList().get(0).getWind().getSpeed() + " " + getString(R.string.km_h);
-                strMinMax = (int) (geographicCoordinates.getList().get(0).getMain().getTemp_min() - 2) + getString(R.string.degree)
-                        + "/" + (int) geographicCoordinates.getList().get(0).getMain().getTemp_max() + getString(R.string.degree);
-
-                tvTodayMinMax.setText(strMinMax);
-                tvTodayHum.setText(humidity);
-                tvTodayWind.setText(strSpeed);
-                tvTodayFeelLike.setText(feels_like);
-                tvTodayDate.setText(date);
-                Picasso.get().load(strImageIcon).into(imgToday);
-                tvTodayDegree.setText(strTodayDegree);
-                tvTodayDesc.setText(strTodayDesc);
-                progress.setVisibility(View.GONE);
-            }
-        });
-    }
-
-    public void handlingViewModelNextGeo(double lat, double lon, String todayUnit, String appId) {
-        progress.setVisibility(View.VISIBLE);
-
-        weatherViewModel = new ViewModelProvider(compatActivity).get(WeatherViewModel.class);
-        weatherViewModel.getGeographicCoordinates(lat, lon, todayUnit, appId, compatActivity);
-        weatherViewModel.geographicCoordinatesMutableLiveData.observe(compatActivity, new Observer<GeographicCoordinates>() {
-            @Override
-            public void onChanged(GeographicCoordinates geographicCoordinates) {
-                foreCastGeoAdapter.setList(geographicCoordinates);
-                foreCastGeoAdapter.notifyDataSetChanged();
-                progress.setVisibility(View.GONE);
-            }
-        });
-    }
 
     //handling the date format
     public String handlingDate(long dateTime) {
@@ -301,6 +231,8 @@ public class TodayFragment extends Fragment {
         time = sdf.format(dateStart);
         return time;
     }
-//29.99768170083821, 31.1504855971676
+
+
+    //29.99768170083821, 31.1504855971676
 
 }
