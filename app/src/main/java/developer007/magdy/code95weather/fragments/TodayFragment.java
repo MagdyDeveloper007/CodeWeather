@@ -1,17 +1,26 @@
 package developer007.magdy.code95weather.fragments;
 
 
+import android.app.Dialog;
 import android.graphics.Color;
 
 
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +32,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import developer007.magdy.code95weather.R;
@@ -39,19 +49,24 @@ public class TodayFragment extends Fragment {
 
     private TextView tvTodayMetric, tvTodayImperial, tvTodayDegree, tvTodayDesc,
             tvTodayDate, tvTodayFeelLike, tvTodayHum, tvTodayWind, tvTodayMinMax;
-    private EditText etLocation;
-    private ImageButton imageLocation, imageSetting;
+    private ImageButton imageSetting;
     private GifImageView progress;
     private ImageView imgToday;
     private RecyclerView recyclerTime;
     private String strTodayUnit, strTodayDegree, strTodayDesc,
-            strLocation, strAppId, strIconBase, strIconExt, strImageIcon, strSpeed, strMinMax;
+            strCity, strCity1, strCity2, strCity3, strCity4, strAppId, strIconBase, strIconExt, strImageIcon, strSpeed, strMinMax;
     private long strTodayDate;
     private String feels_like, temp_min, temp_max, humidity;
     private WeatherViewModel weatherViewModel;
     private AppCompatActivity compatActivity;
     private static final String TAG = "TodayFragment";
     private ForeCastAdapter foreCastAdapter;
+    private TextView tvSelectCity;
+    private ArrayList<String> arrayList;
+    private Dialog dialog;
+    private EditText etCity;
+    private ListView listItem;
+
 
     @Override
     public View onCreateView(
@@ -60,17 +75,21 @@ public class TodayFragment extends Fragment {
     ) {
         View view = inflater.inflate(R.layout.fragment_today, container, false);
         compatActivity = (AppCompatActivity) view.getContext();
-
+        arrayList = new ArrayList<>();
 
         strTodayUnit = SharedPrefManager.getAuthPref(compatActivity).getString("unit", "metric");
-        strLocation = SharedPrefManager.getAuthPref(compatActivity).getString("location", "");
+        strCity = SharedPrefManager.getAuthPref(compatActivity).getString("location", "");
+        strCity1 = SharedPrefManager.getAuthPref(compatActivity).getString("location1", "");
+        strCity2 = SharedPrefManager.getAuthPref(compatActivity).getString("location2", "");
+        strCity3 = SharedPrefManager.getAuthPref(compatActivity).getString("location3", "");
+        strCity4 = SharedPrefManager.getAuthPref(compatActivity).getString("location4", "");
 
         API api = new API();
         strAppId = api.getApId();
         strIconBase = api.getImageURl();
         strIconExt = api.getImgExtUrl();
 
-
+        tvSelectCity = view.findViewById(R.id.tvSelectCity);
         tvTodayMetric = view.findViewById(R.id.tvTodayMetric);
         tvTodayMinMax = view.findViewById(R.id.tvTodayMinMax);
         tvTodayWind = view.findViewById(R.id.tvTodayWind);
@@ -80,8 +99,7 @@ public class TodayFragment extends Fragment {
         tvTodayDesc = view.findViewById(R.id.tvTodayDesc);
         tvTodayDegree = view.findViewById(R.id.tvTodayDegree);
         tvTodayDate = view.findViewById(R.id.tvTodayDate);
-        etLocation = view.findViewById(R.id.etLocation);
-        imageLocation = view.findViewById(R.id.imageLocation);
+
         imgToday = view.findViewById(R.id.imgToday);
         progress = view.findViewById(R.id.progress);
         imgToday = view.findViewById(R.id.imgToday);
@@ -91,8 +109,23 @@ public class TodayFragment extends Fragment {
 
         foreCastAdapter = new ForeCastAdapter();
 
+        if (!TextUtils.isEmpty(strCity)) {
+            arrayList.add(strCity);
+            tvSelectCity.setText(strCity);
+        }
+        if (!TextUtils.isEmpty(strCity1)) {
+            arrayList.add(strCity1);
+        }
+        if (!TextUtils.isEmpty(strCity2)) {
+            arrayList.add(strCity2);
+        }
+        if (!TextUtils.isEmpty(strCity3)) {
+            arrayList.add(strCity3);
+        }
+        if (!TextUtils.isEmpty(strCity4)) {
+            arrayList.add(strCity4);
+        }
 
-        etLocation.setText(strLocation);
         if (strTodayUnit.equals("metric")) {
             tvTodayMetric.setTextColor(Color.WHITE);
             tvTodayImperial.setTextColor(Color.DKGRAY);
@@ -105,14 +138,15 @@ public class TodayFragment extends Fragment {
             tvTodayImperial.setTextColor(Color.WHITE);
             strTodayUnit = "imperial";
 
-            if (TextUtils.isEmpty(strLocation)) {
+
+            if (TextUtils.isEmpty(strCity)) {
 
                 NavHostFragment.findNavController(TodayFragment.this)
                         .navigate(R.id.action_TodayFragment_to_SettingFragment);
             } else {
                 recyclerTime.setAdapter(foreCastAdapter);
-                handlingViewModelToday(strLocation, strTodayUnit, strAppId);
-                handlingViewModelNext(strLocation, strTodayUnit, strAppId);
+                handlingViewModelToday(strCity, strTodayUnit, strAppId);
+                handlingViewModelNext(strCity, strTodayUnit, strAppId);
             }
 
 
@@ -122,32 +156,15 @@ public class TodayFragment extends Fragment {
             tvTodayImperial.setTextColor(Color.DKGRAY);
             strTodayUnit = "metric";
 
-            if (TextUtils.isEmpty(strLocation)) {
+            if (TextUtils.isEmpty(strCity)) {
                 NavHostFragment.findNavController(TodayFragment.this)
                         .navigate(R.id.action_TodayFragment_to_SettingFragment);
 
             } else {
                 recyclerTime.setAdapter(foreCastAdapter);
-                handlingViewModelToday(strLocation, strTodayUnit, strAppId);
-                handlingViewModelNext(strLocation, strTodayUnit, strAppId);
+                handlingViewModelToday(strCity, strTodayUnit, strAppId);
+                handlingViewModelNext(strCity, strTodayUnit, strAppId);
             }
-
-        });
-        imageLocation.setOnClickListener(v -> {
-            progress.setVisibility(View.VISIBLE);
-            strLocation = "";
-            strLocation = etLocation.getText().toString().trim();
-
-            if (TextUtils.isEmpty(strLocation)) {
-                NavHostFragment.findNavController(TodayFragment.this)
-                        .navigate(R.id.action_TodayFragment_to_SettingFragment);
-
-            } else {
-                recyclerTime.setAdapter(foreCastAdapter);
-                handlingViewModelToday(strLocation, strTodayUnit, strAppId);
-                handlingViewModelNext(strLocation, strTodayUnit, strAppId);
-            }
-
 
         });
 
@@ -155,16 +172,58 @@ public class TodayFragment extends Fragment {
         imageSetting.setOnClickListener(v -> NavHostFragment.findNavController(TodayFragment.this)
                 .navigate(R.id.action_TodayFragment_to_SettingFragment));
 
-        if (TextUtils.isEmpty(strLocation)) {
+        if (TextUtils.isEmpty(strCity)) {
             NavHostFragment.findNavController(TodayFragment.this)
                     .navigate(R.id.action_TodayFragment_to_SettingFragment);
 
         } else {
             recyclerTime.setAdapter(foreCastAdapter);
-            handlingViewModelToday(strLocation, strTodayUnit, strAppId);
-            handlingViewModelNext(strLocation, strTodayUnit, strAppId);
+            handlingViewModelToday(strCity, strTodayUnit, strAppId);
+            handlingViewModelNext(strCity, strTodayUnit, strAppId);
         }
+        tvSelectCity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog = new Dialog(compatActivity);
+                dialog.setContentView(R.layout.dialog_searchable_spinner);
+                Window window = dialog.getWindow();
+                WindowManager.LayoutParams windowManager = window.getAttributes();
+                windowManager.gravity = Gravity.TOP;
+                window.setAttributes(windowManager);
+                dialog.show();
+                etCity = dialog.findViewById(R.id.etCity);
+                listItem = dialog.findViewById(R.id.listItem);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter(compatActivity, android.R.layout.simple_list_item_1, arrayList);
+                listItem.setAdapter(arrayAdapter);
+                etCity.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        arrayAdapter.getFilter().filter(s);
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+                listItem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        tvSelectCity.setText(arrayAdapter.getItem(position));
+                        dialog.dismiss();
+                        handlingViewModelToday(arrayAdapter.getItem(position), strTodayUnit, strAppId);
+                        handlingViewModelNext(arrayAdapter.getItem(position), strTodayUnit, strAppId);
+                    }
+                });
+
+            }
+        });
 
         return view;
     }
