@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 || conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.DISCONNECTED) {
 
             Toast.makeText(this, R.string.disconnected, Toast.LENGTH_SHORT).show();
-            tvDisConnected.setVisibility(View.VISIBLE);
+         //   tvDisConnected.setVisibility(View.VISIBLE);
         }
     }
 

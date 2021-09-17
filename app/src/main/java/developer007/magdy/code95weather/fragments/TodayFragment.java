@@ -2,9 +2,12 @@ package developer007.magdy.code95weather.fragments;
 
 
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Color;
 
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -22,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -231,7 +235,6 @@ public class TodayFragment extends Fragment {
 
     public void handlingViewModelToday(String location, String todayUnit, String appId) {
 
-
         weatherViewModel = new ViewModelProvider(compatActivity).get(WeatherViewModel.class);
 
         weatherViewModel.getTodayWeather(location, todayUnit, appId, compatActivity);
@@ -250,6 +253,7 @@ public class TodayFragment extends Fragment {
             strMinMax = (int) (todayWeatherModule.getMain().getTemp_min() - 2) + getString(R.string.degree)
                     + "/" + (int) todayWeatherModule.getMain().getTemp_max() + getString(R.string.degree);
 
+
             tvTodayMinMax.setText(strMinMax);
             tvTodayHum.setText(humidity);
             tvTodayWind.setText(strSpeed);
@@ -266,7 +270,6 @@ public class TodayFragment extends Fragment {
 
     //handling the view model singular for next days
     public void handlingViewModelNext(String location, String todayUnit, String appId) {
-
         progress.setVisibility(View.VISIBLE);
 
         weatherViewModel = new ViewModelProvider(compatActivity).get(WeatherViewModel.class);
@@ -291,7 +294,5 @@ public class TodayFragment extends Fragment {
         return time;
     }
 
-
-    //29.99768170083821, 31.1504855971676
 
 }
