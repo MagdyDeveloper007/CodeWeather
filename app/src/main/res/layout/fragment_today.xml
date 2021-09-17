@@ -66,32 +66,20 @@
                     </LinearLayout>
 
 
-                    <ImageButton
-                        android:id="@+id/imageLocation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:layout_toEndOf="@+id/etLocation"
-                        android:background="@android:color/transparent"
-                        android:contentDescription="@string/location"
-                        android:src="@drawable/ic_baseline_search" />
-
-                    <EditText
-                        android:id="@+id/etLocation"
+                    <TextView
+                        android:id="@+id/tvSelectCity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="8dp"
-                        android:autofillHints="@string/enter_location"
                         android:background="@android:color/transparent"
-                        android:hint="@string/enter_location"
-                        android:inputType="textAutoCorrect"
+                        android:padding="12dp"
+                        android:text="@string/select_city"
                         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
                         android:textColor="@color/white"
-                        android:textColorHint="@android:color/darker_gray"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        app:drawableEndCompat="@drawable/ic_baseline_arrow_drop_down" />
 
                     <ImageButton
                         android:id="@+id/imageSetting"
