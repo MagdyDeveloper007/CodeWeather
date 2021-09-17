@@ -43,4 +43,5 @@
     <string name="disconnected">You are disconnected</string>
     <string name="last_update_on">Last update on:</string>
     <string name="search">Search...</string>
+    <string name="you_are_on_offline_mode">You are on Offline Mode</string>
 </resources>

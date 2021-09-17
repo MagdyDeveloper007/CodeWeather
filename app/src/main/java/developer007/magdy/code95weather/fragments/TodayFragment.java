@@ -106,7 +106,6 @@ public class TodayFragment extends Fragment {
 
         imgToday = view.findViewById(R.id.imgToday);
         progress = view.findViewById(R.id.progress);
-        imgToday = view.findViewById(R.id.imgToday);
         imageSetting = view.findViewById(R.id.imageSetting);
         recyclerTime = view.findViewById(R.id.recyclerTime);
 

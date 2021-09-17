@@ -48,9 +48,23 @@ import pl.droidsonroids.gif.GifImageView;
 
 
 public class OfflineFragment extends Fragment {
-    private Button btn;
+    private static final String TAG = "OfflineFragment";
+
     private AppCompatActivity compatActivity;
     private FloatingActionButton floatingActionButton;
+    private TextView tvOfflineDegree, tvOfflineDesc,
+            tvOfflineDate, tvOfflineFeelLike, tvOfflineHum, tvOfflineWind, tvOfflineMinMax;
+    private TextView tvSelectOfflineCity;
+    private ImageView imgOffline;
+    private String strOfflineUnit, strOfflineDegree, strOfflineDesc,
+            strCity, strCity1, strCity2, strCity3, strCity4, strImageIcon, strSpeed, strMinMax;
+    private String feels_like, temp_min, temp_max, humidity;
+    private WeatherViewModel weatherViewModel;
+    private ArrayList<String> arrayList;
+    private Dialog dialog;
+    private EditText etCity;
+    private ListView listItem;
+
 
     @Override
     public View onCreateView(
@@ -60,8 +74,44 @@ public class OfflineFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_offline, container, false);
         compatActivity = (AppCompatActivity) view.getContext();
         checkConnection();
+        arrayList = new ArrayList<>();
 
-        btn = view.findViewById(R.id.btn);
+        strOfflineUnit = SharedPrefManager.getAuthPref(compatActivity).getString("unit", "metric");
+        strCity = SharedPrefManager.getAuthPref(compatActivity).getString("location", "");
+        strCity1 = SharedPrefManager.getAuthPref(compatActivity).getString("location1", "");
+        strCity2 = SharedPrefManager.getAuthPref(compatActivity).getString("location2", "");
+        strCity3 = SharedPrefManager.getAuthPref(compatActivity).getString("location3", "");
+        strCity4 = SharedPrefManager.getAuthPref(compatActivity).getString("location4", "");
+
+        tvSelectOfflineCity = view.findViewById(R.id.tvSelectOfflineCity);
+        tvOfflineMinMax = view.findViewById(R.id.tvOfflineMinMax);
+        tvOfflineWind = view.findViewById(R.id.tvOfflineWind);
+        tvOfflineHum = view.findViewById(R.id.tvOfflineHum);
+        tvOfflineFeelLike = view.findViewById(R.id.tvOfflineFeelLike);
+        tvOfflineDesc = view.findViewById(R.id.tvOfflineDesc);
+        tvOfflineDegree = view.findViewById(R.id.tvOfflineDegree);
+        tvOfflineDate = view.findViewById(R.id.tvOfflineDate);
+        imgOffline = view.findViewById(R.id.imgOffline);
+
+
+        if (!TextUtils.isEmpty(strCity)) {
+            arrayList.add(strCity);
+            tvSelectOfflineCity.setText(strCity);
+        }
+        if (!TextUtils.isEmpty(strCity1)) {
+            arrayList.add(strCity1);
+        }
+        if (!TextUtils.isEmpty(strCity2)) {
+            arrayList.add(strCity2);
+        }
+        if (!TextUtils.isEmpty(strCity3)) {
+            arrayList.add(strCity3);
+        }
+        if (!TextUtils.isEmpty(strCity4)) {
+            arrayList.add(strCity4);
+        }
+
+        //dddddd
         floatingActionButton = view.findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,15 +119,50 @@ public class OfflineFragment extends Fragment {
                 checkConnection();
             }
         });
-/*        btn.setOnClickListener(new View.OnClickListener() {
+        tvSelectOfflineCity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NavHostFragment.findNavController(OfflineFragment.this).navigate(R.id.action_OfflineFragment_to_TodayFragment);
+                dialog = new Dialog(compatActivity);
+                dialog.setContentView(R.layout.dialog_searchable_spinner);
+                Window window = dialog.getWindow();
+                WindowManager.LayoutParams windowManager = window.getAttributes();
+                windowManager.gravity = Gravity.TOP;
+                window.setAttributes(windowManager);
+                dialog.show();
+                etCity = dialog.findViewById(R.id.etCity);
+                listItem = dialog.findViewById(R.id.listItem);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter(compatActivity, android.R.layout.simple_list_item_1, arrayList);
+                listItem.setAdapter(arrayAdapter);
+                etCity.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        arrayAdapter.getFilter().filter(s);
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+                listItem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        tvSelectOfflineCity.setText(arrayAdapter.getItem(position));
+                        dialog.dismiss();
+
+                    }
+                });
+
             }
-        });*/
+        });
         return view;
     }
-    //handling the view model singular for today
 
     //handling the date format
     public String handlingDate(long dateTime) {
