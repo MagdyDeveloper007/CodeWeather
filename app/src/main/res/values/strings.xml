@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Code95Weather</string>
+    <string name="offline_fragment_label">Offline Fragment</string>
     <string name="today_fragment_label">Today Fragment</string>
     <string name="setting_fragment_label">Setting Fragment</string>
     <string name="next">Next</string>
@@ -42,4 +43,5 @@
     <string name="disconnected">You are disconnected</string>
     <string name="last_update_on">Last update on:</string>
     <string name="search">Search...</string>
+    <string name="you_are_on_offline_mode">You are on Offline Mode</string>
 </resources>

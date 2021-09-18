@@ -18,6 +18,7 @@
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
+            android:noHistory="true"
             android:theme="@style/Theme.Code95Weather.NoActionBar"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
