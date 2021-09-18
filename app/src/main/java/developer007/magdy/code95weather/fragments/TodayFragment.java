@@ -248,7 +248,6 @@ public class TodayFragment extends Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         selectedCity = arrayAdapter.getItem(position);
-                        SharedPrefManager.setAuthVal(compatActivity, "saved", selectedCity);
                         tvSelectCity.setText(selectedCity);
 
                         handlingViewModelToday(selectedCity, strTodayUnit, strAppId);
