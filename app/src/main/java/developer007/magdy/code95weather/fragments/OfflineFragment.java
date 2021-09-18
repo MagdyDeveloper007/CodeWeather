@@ -5,11 +5,13 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +47,8 @@ public class OfflineFragment extends Fragment {
     private String strOfflineDegree, strOfflineDesc, strDate, strImageIcon, strSpeed, strMinMax;
     private String selectedCity;
     private String feels_like, humidity;
+    private RelativeLayout layoutOffline;
+    private ImageView imgNoInternet;
 
     private DefaultCityDatabase defaultCityDatabase;
 
@@ -56,11 +60,13 @@ public class OfflineFragment extends Fragment {
     ) {
         View view = inflater.inflate(R.layout.fragment_offline, container, false);
         compatActivity = (AppCompatActivity) view.getContext();
+        imgNoInternet = view.findViewById(R.id.imgNoInternet);
         checkConnection();
         defaultCityDatabase = DefaultCityDatabase.getInstance(compatActivity);
         selectedCity = SharedPrefManager.getAuthPref(compatActivity).getString("saved", "");
 
 
+        layoutOffline = view.findViewById(R.id.layoutOffline);
         tvSelectOfflineCity = view.findViewById(R.id.tvSelectOfflineCity);
         tvOfflineMinMax = view.findViewById(R.id.tvOfflineMinMax);
         tvOfflineWind = view.findViewById(R.id.tvOfflineWind);
@@ -79,8 +85,16 @@ public class OfflineFragment extends Fragment {
                 checkConnection();
             }
         });
-        tvSelectOfflineCity.setText(selectedCity);
-        checkTheDatabase();
+
+        if (TextUtils.isEmpty(selectedCity)) {
+            layoutOffline.setVisibility(View.GONE);
+            imgNoInternet.setVisibility(View.VISIBLE);
+        } else {
+            imgNoInternet.setVisibility(View.GONE);
+            layoutOffline.setVisibility(View.VISIBLE);
+            tvSelectOfflineCity.setText(selectedCity);
+            checkTheDatabase();
+        }
         return view;
     }
 
@@ -142,4 +156,7 @@ public class OfflineFragment extends Fragment {
             Toast.makeText(compatActivity, R.string.disconnected, Toast.LENGTH_SHORT).show();
         }
     }
+
+
 }
+
