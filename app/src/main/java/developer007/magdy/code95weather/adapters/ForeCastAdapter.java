@@ -11,11 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import developer007.magdy.code95weather.R;
-import developer007.magdy.code95weather.data.API;
+import developer007.magdy.code95weather.Services.API;
 import developer007.magdy.code95weather.modules.forecast.ForeCastModule;
 
 

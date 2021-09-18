@@ -2,12 +2,9 @@ package developer007.magdy.code95weather.fragments;
 
 
 import android.app.Dialog;
-import android.content.Context;
 import android.graphics.Color;
 
 
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -25,7 +22,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -41,10 +37,16 @@ import java.util.Date;
 
 import developer007.magdy.code95weather.R;
 import developer007.magdy.code95weather.adapters.ForeCastAdapter;
-import developer007.magdy.code95weather.data.API;
+import developer007.magdy.code95weather.Services.API;
+import developer007.magdy.code95weather.data.DefaultCityDatabase;
 import developer007.magdy.code95weather.data.SharedPrefManager;
 
+import developer007.magdy.code95weather.modules.SavedModule.SavedWeatherDefaultCityModule;
 import developer007.magdy.code95weather.utilities.WeatherViewModel;
+import io.reactivex.CompletableObserver;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import pl.droidsonroids.gif.GifImageView;
 
 
@@ -59,6 +61,7 @@ public class TodayFragment extends Fragment {
     private RecyclerView recyclerTime;
     private String strTodayUnit, strTodayDegree, strTodayDesc,
             strCity, strCity1, strCity2, strCity3, strCity4, strAppId, strIconBase, strIconExt, strImageIcon, strSpeed, strMinMax;
+    private String selectedCity;
     private long strTodayDate;
     private String feels_like, temp_min, temp_max, humidity;
     private WeatherViewModel weatherViewModel;
@@ -70,6 +73,7 @@ public class TodayFragment extends Fragment {
     private Dialog dialog;
     private EditText etCity;
     private ListView listItem;
+    private DefaultCityDatabase defaultCityDatabase;
 
 
     @Override
@@ -79,15 +83,23 @@ public class TodayFragment extends Fragment {
     ) {
         View view = inflater.inflate(R.layout.fragment_today, container, false);
         compatActivity = (AppCompatActivity) view.getContext();
+
+//databases instance
+        defaultCityDatabase = DefaultCityDatabase.getInstance(compatActivity);
+
+
         arrayList = new ArrayList<>();
 
+        //get saved Cities
         strTodayUnit = SharedPrefManager.getAuthPref(compatActivity).getString("unit", "metric");
         strCity = SharedPrefManager.getAuthPref(compatActivity).getString("location", "");
         strCity1 = SharedPrefManager.getAuthPref(compatActivity).getString("location1", "");
         strCity2 = SharedPrefManager.getAuthPref(compatActivity).getString("location2", "");
         strCity3 = SharedPrefManager.getAuthPref(compatActivity).getString("location3", "");
         strCity4 = SharedPrefManager.getAuthPref(compatActivity).getString("location4", "");
+        selectedCity = SharedPrefManager.getAuthPref(compatActivity).getString("saved", "");
 
+        //api instance
         API api = new API();
         strAppId = api.getApId();
         strIconBase = api.getImageURl();
@@ -112,6 +124,7 @@ public class TodayFragment extends Fragment {
 
         foreCastAdapter = new ForeCastAdapter();
 
+        //add to list of cities
         if (!TextUtils.isEmpty(strCity)) {
             arrayList.add(strCity);
             tvSelectCity.setText(strCity);
@@ -136,6 +149,8 @@ public class TodayFragment extends Fragment {
             tvTodayMetric.setTextColor(Color.DKGRAY);
             tvTodayImperial.setTextColor(Color.WHITE);
         }
+
+
         tvTodayImperial.setOnClickListener(v -> {
             tvTodayMetric.setTextColor(Color.DKGRAY);
             tvTodayImperial.setTextColor(Color.WHITE);
@@ -147,9 +162,13 @@ public class TodayFragment extends Fragment {
                 NavHostFragment.findNavController(TodayFragment.this)
                         .navigate(R.id.action_TodayFragment_to_SettingFragment);
             } else {
+
                 recyclerTime.setAdapter(foreCastAdapter);
+
                 handlingViewModelToday(strCity, strTodayUnit, strAppId);
+
                 handlingViewModelNext(strCity, strTodayUnit, strAppId);
+
             }
 
 
@@ -165,8 +184,13 @@ public class TodayFragment extends Fragment {
 
             } else {
                 recyclerTime.setAdapter(foreCastAdapter);
+
                 handlingViewModelToday(strCity, strTodayUnit, strAppId);
+
+
                 handlingViewModelNext(strCity, strTodayUnit, strAppId);
+
+
             }
 
         });
@@ -181,8 +205,13 @@ public class TodayFragment extends Fragment {
 
         } else {
             recyclerTime.setAdapter(foreCastAdapter);
+
             handlingViewModelToday(strCity, strTodayUnit, strAppId);
+
+
             handlingViewModelNext(strCity, strTodayUnit, strAppId);
+
+
         }
         tvSelectCity.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -218,10 +247,13 @@ public class TodayFragment extends Fragment {
                 listItem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        tvSelectCity.setText(arrayAdapter.getItem(position));
+                        selectedCity = arrayAdapter.getItem(position);
+                        SharedPrefManager.setAuthVal(compatActivity, "saved", selectedCity);
+                        tvSelectCity.setText(selectedCity);
+
+                        handlingViewModelToday(selectedCity, strTodayUnit, strAppId);
+                        handlingViewModelNext(selectedCity, strTodayUnit, strAppId);
                         dialog.dismiss();
-                        handlingViewModelToday(arrayAdapter.getItem(position), strTodayUnit, strAppId);
-                        handlingViewModelNext(arrayAdapter.getItem(position), strTodayUnit, strAppId);
                     }
                 });
 
@@ -233,7 +265,8 @@ public class TodayFragment extends Fragment {
     //handling the view model singular for today
 
     public void handlingViewModelToday(String location, String todayUnit, String appId) {
-
+        selectedCity = location;
+        SharedPrefManager.setAuthVal(compatActivity, "saved", selectedCity);
         weatherViewModel = new ViewModelProvider(compatActivity).get(WeatherViewModel.class);
 
         weatherViewModel.getTodayWeather(location, todayUnit, appId, compatActivity);
@@ -261,6 +294,37 @@ public class TodayFragment extends Fragment {
             Picasso.get().load(strImageIcon).into(imgToday);
             tvTodayDegree.setText(strTodayDegree);
             tvTodayDesc.setText(strTodayDesc);
+
+
+            //save to selected database
+
+            SavedWeatherDefaultCityModule savedWeatherDefaultCityModule
+                    = new SavedWeatherDefaultCityModule(strImageIcon,
+                    strTodayDegree, strTodayDesc, date, strSpeed, feels_like, strMinMax, humidity);
+
+            defaultCityDatabase.savedDefaultCity().deleteCurrentTable();
+
+            defaultCityDatabase.savedDefaultCity().insertData(savedWeatherDefaultCityModule)
+                    .observeOn(Schedulers.newThread())
+                    .subscribeOn(Schedulers.computation())
+                    .subscribe(new CompletableObserver() {
+                        @Override
+                        public void onSubscribe(@NonNull Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+
+                        @Override
+                        public void onError(@NonNull Throwable e) {
+
+                        }
+                    });
+
+
             progress.setVisibility(View.GONE);
 
 
@@ -270,7 +334,8 @@ public class TodayFragment extends Fragment {
     //handling the view model singular for next days
     public void handlingViewModelNext(String location, String todayUnit, String appId) {
         progress.setVisibility(View.VISIBLE);
-
+        selectedCity = location;
+        SharedPrefManager.setAuthVal(compatActivity, "saved", selectedCity);
         weatherViewModel = new ViewModelProvider(compatActivity).get(WeatherViewModel.class);
 
         weatherViewModel.getForecast(location, todayUnit, appId, compatActivity);
@@ -292,6 +357,5 @@ public class TodayFragment extends Fragment {
         time = sdf.format(dateStart);
         return time;
     }
-
 
 }

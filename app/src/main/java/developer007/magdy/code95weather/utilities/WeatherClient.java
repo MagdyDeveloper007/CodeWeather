@@ -1,6 +1,6 @@
 package developer007.magdy.code95weather.utilities;
 
-import developer007.magdy.code95weather.data.API;
+import developer007.magdy.code95weather.Services.API;
 import developer007.magdy.code95weather.modules.forecast.ForeCastModule;
 import developer007.magdy.code95weather.modules.weather.TodayWeatherModule;
 import retrofit2.Call;

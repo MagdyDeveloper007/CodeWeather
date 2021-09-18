@@ -1,4 +1,4 @@
-package developer007.magdy.code95weather.data;
+package developer007.magdy.code95weather.Services;
 
 public class API {
     String apId = "f13345c6a98d6840d6c8707ef3d1aff0";

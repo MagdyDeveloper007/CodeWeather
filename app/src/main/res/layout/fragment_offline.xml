@@ -44,11 +44,9 @@
                 android:layout_marginEnd="8dp"
                 android:background="@android:color/transparent"
                 android:padding="12dp"
-                android:text="@string/select_city"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
                 android:textColor="@color/white"
-                android:textStyle="bold"
-                app:drawableEndCompat="@drawable/ic_baseline_arrow_drop_down" />
+                android:textStyle="bold" />
 
 
             <TextView
